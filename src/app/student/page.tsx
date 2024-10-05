@@ -23,7 +23,7 @@ export default function StudentPage() {
   const [myEnrollments, setMyEnrollments] = useState<Course[] | null>(null);
   const [loadingMyEnrollments, setLoadingMyEnrollments] = useState(false);
 
-  const [loadingEnrolling, setLoadingEnrolling] = useState(false);
+  //const [loadingEnrolling, setLoadingEnrolling] = useState(false);
   const [loadingDropping, setLoadingDropping] = useState("");
   const [courseNo, setCourseNo] = useState("");
   const router = useRouter();
@@ -60,13 +60,15 @@ export default function StudentPage() {
         {
           headers: { Authorization: `Bearer ${token}` },
         }
+
       );
+      console.log(resp);
       setCourseNo("");
       loadMyCourses();
     } catch (error) {
       // if (error.response) alert(error.response.data.message);
       // else alert(error.message);
-
+      
       if (axios.isAxiosError(error)) {
         console.log(error.status);
         console.error(error.response);
@@ -89,12 +91,14 @@ export default function StudentPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
       loadMyCourses();
+      console.log(resp);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.log(error.status);
         console.error(error.response);
         alert(error.response?.data.message);
         // Do something with this error...
+        
       } else {
         console.error(error);
         alert(error);
