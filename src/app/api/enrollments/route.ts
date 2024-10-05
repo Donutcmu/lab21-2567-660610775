@@ -1,7 +1,9 @@
 import { checkToken } from "@lib/checkToken";
 import { Database, Payload } from "@lib/types";
 import { NextRequest, NextResponse } from "next/server";
+
 import { getPrisma } from "@lib/getPrisma";
+
 
 export const GET = async () => {
   const payload = checkToken();
@@ -44,6 +46,10 @@ export const GET = async () => {
   });
 };
 
+
+
+
+
 export const POST = async (request: NextRequest) => {
   const payload = checkToken();
   if (!payload) {
@@ -81,12 +87,60 @@ export const POST = async (request: NextRequest) => {
   }
 
   // Coding in lecture
+  const prisma = getPrisma();
+  const course = await prisma.course.findUnique({
+    where: {
+      courseNo:courseNo,
+    },
+  });
+  if (!course) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "Course number does not exist.",
+      },
+      { status: 404 }
+    );
+  }
+
+  const existEnrollment = await prisma.enrollment.findUnique({
+    where: {
+      courseNo_studentId: {
+        courseNo,
+        studentId,
+      },
+  }});
+  if (existEnrollment) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "You already registered this course.",
+      },
+      { status: 409 }
+    );
+  }
+  await prisma.enrollment.create({
+    data: {
+      studentId,
+      courseNo,
+    },
+  });
+  
+
 
   return NextResponse.json({
     ok: true,
-    message: "You has enrolled a course successfully",
-  });
+    message: "You have enrolled in the course successfully.",
+  })
+
+  
 };
+
+
+
+
+
+
 
 // Need review together with drop enrollment form.
 export const DELETE = async (request: NextRequest) => {
@@ -124,9 +178,20 @@ export const DELETE = async (request: NextRequest) => {
       { status: 400 }
     );
   }
-
   const prisma = getPrisma();
+
+  
+
   // Perform data delete
+  await prisma.enrollment.delete({
+    where: {
+      courseNo_studentId: {
+        courseNo,
+        studentId,
+      },
+    },
+  });
+
 
   return NextResponse.json({
     ok: true,
