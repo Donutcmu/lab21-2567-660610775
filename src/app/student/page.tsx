@@ -1,7 +1,7 @@
 "use client";
 
 import { $authenStore } from "@lib/authenStore";
-import { Course } from "@lib/types";
+import {Enrollment} from "@lib/types";
 
 import {
   Button,
@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function StudentPage() {
-  const [myEnrollments, setMyEnrollments] = useState<Course[] | null>(null);
+  const [myEnrollments, setMyEnrollments] = useState<Enrollment[] | null>(null);
   const [loadingMyEnrollments, setLoadingMyEnrollments] = useState(false);
 
   //const [loadingEnrolling, setLoadingEnrolling] = useState(false);
@@ -60,7 +60,6 @@ export default function StudentPage() {
         {
           headers: { Authorization: `Bearer ${token}` },
         }
-
       );
       console.log(resp);
       setCourseNo("");
@@ -68,7 +67,7 @@ export default function StudentPage() {
     } catch (error) {
       // if (error.response) alert(error.response.data.message);
       // else alert(error.message);
-      
+
       if (axios.isAxiosError(error)) {
         console.log(error.status);
         console.error(error.response);
@@ -90,15 +89,14 @@ export default function StudentPage() {
         },
         headers: { Authorization: `Bearer ${token}` },
       });
-      loadMyCourses();
       console.log(resp);
+      loadMyCourses();
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.log(error.status);
         console.error(error.response);
         alert(error.response?.data.message);
         // Do something with this error...
-        
       } else {
         console.error(error);
         alert(error);
@@ -121,7 +119,7 @@ export default function StudentPage() {
         <Title order={4}>My Course(s)</Title>
 
         {myEnrollments &&
-          myEnrollments.map((enroll: any) => (
+          myEnrollments.map((enroll: Enrollment) => (
             <Group my="xs" key={enroll.courseNo}>
               <Text>
                 {enroll.courseNo} - {enroll.course.title}

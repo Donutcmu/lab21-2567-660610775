@@ -4,6 +4,11 @@ export interface footerProps {
     year: string;
   }
 
+  export interface Enrollment {
+    courseNo: string;
+    course: Course; 
+  };
+
 export interface Payload {
   username: string;
   studentId: string;

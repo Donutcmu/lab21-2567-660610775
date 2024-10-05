@@ -40,7 +40,11 @@ export default function RootLayout({
         $authenStore.set({ token, authenUsername });
         console.log(resp);
       } catch (err:any) {
-        console.log(err.message);
+        if (err instanceof Error) {
+          console.log(err.message);
+        } else {
+          console.log('Unknown error occurred');
+        }
         isTokenValid = false;
       }
     }
