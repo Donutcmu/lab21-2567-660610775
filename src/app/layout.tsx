@@ -39,7 +39,7 @@ export default function RootLayout({
         });
         $authenStore.set({ token, authenUsername });
         console.log(resp);
-      } catch (err:any) {
+      } catch (err) {
         if (err instanceof Error) {
           console.log(err.message);
         } else {
